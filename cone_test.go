@@ -3,7 +3,7 @@
 package procedural
 
 import (
-	"azul3d.org/scene/geom"
+	"azul3d.org/v0/scene/geom"
 	"fmt"
 )
 

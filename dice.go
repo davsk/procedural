@@ -3,8 +3,8 @@
 package procedural
 
 import (
-	"azul3d.org/scene/geom"
-	"azul3d.org/scene/texture"
+	"azul3d.org/v0/scene/geom"
+	"azul3d.org/v0/scene/texture"
 )
 
 // Dice builds and returns an new 3D cube mesh
