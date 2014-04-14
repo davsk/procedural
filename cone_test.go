@@ -5,6 +5,7 @@ package procedural
 import (
 	"azul3d.org/v0/scene/geom"
 	"fmt"
+	"testing"
 )
 
 func ExampleCone() {
@@ -25,4 +26,22 @@ func ExampleCone() {
 	// vertices := [{0 0 1} {0 1 -1} {1 6.123234e-17 -1} {1.2246469e-16 -1 -1} {-1 -1.8369701e-16 -1} {0 0 -1}]
 	// indices := [0 4 1 0 1 2 0 2 3 0 3 4 5 4 1 5 1 2 5 2 3 5 3 4]
 
+}
+
+func BenchmarkCone4(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = Cone(1.0, 4, true, geom.Static)
+	}
+}
+
+func BenchmarkCone16(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = Cone(1.0, 16, true, geom.Static)
+	}
+}
+
+func BenchmarkCone64(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = Cone(1.0, 64, true, geom.Static)
+	}
 }
