@@ -19,6 +19,9 @@ To import this package, add the following line to your code:
 
         import "gopkg.in/go-azul3d/procedural.v1"
 
+Version 0.1.0
+-------------
+
 Version v0.1.0 is compatible with azul3d.org/v0
 
 	    go get azul3d.org/v0
@@ -26,4 +29,4 @@ Version v0.1.0 is compatible with azul3d.org/v0
 
 To import this package, add the following line to your code:
 
-        import "gopkg.in/go-azul3d/procedural.v1"
+        import "gopkg.in/go-azul3d/procedural.v0"
