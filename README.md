@@ -9,7 +9,15 @@ Installation
 
 This Package depends on and requires the azul3d.org packages which should be installed first.
   * [https://code.google.com/p/azul3d/](https://code.google.com/p/azul3d/)
-note that this package is only compatable with Version of Azul3d so you will need to:
-	go get azul3d.org/v0
 
-		import "github.com/go-azul3d/procedural"
+Version v1.0.0 is compatible with azul3d.org/v1
+	go get azul3d.org/v1
+	go get gopkg.in/go-azul3d/procedural.v1
+To import this package, add the following line to your code:
+    import "gopkg.in/go-azul3d/procedural.v1"
+
+Version v0.1.0 is compatible with azul3d.org/v0
+	go get azul3d.org/v0
+	go get gopkg.in/go-azul3d/procedural.v0
+To import this package, add the following line to your code:
+    import "gopkg.in/go-azul3d/procedural.v1"

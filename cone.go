@@ -3,13 +3,12 @@
 package procedural
 
 import (
-	"azul3d.org/v0/scene/geom"
-	"azul3d.org/v0/scene/texture"
+	"azul3d.org/v1/gfx"
 	"math"
 )
 
 // Cone builds and returns an new 3D cone mesh. Minimum of 3 steps.
-func Cone(scale float32, steps int, capped bool, hint geom.Hint) *geom.Mesh {
+func Cone(scale float32, steps int, capped bool) *gfx.Mesh {
 	var (
 		angle, inc float64
 		uvX, uvY   float32
@@ -33,14 +32,14 @@ func Cone(scale float32, steps int, capped bool, hint geom.Hint) *geom.Mesh {
 		maxIndices *= 2
 	}
 
-	vertices := make([]geom.Vertex, maxVertices)
+	vertices := make([]gfx.Vec3, maxVertices)
 	indices := make([]uint32, maxIndices)
-	textureCoords := make([]texture.Coord, maxVertices)
+	textureCoords := make([]gfx.TexCoord, maxVertices)
 
-	vertices[0] = geom.Vertex{0, 0, x}
+	vertices[0] = gfx.Vec3{0, 0, x}
 
 	if capped {
-		vertices[maxVertices-1] = geom.Vertex{0, 0, -x}
+		vertices[maxVertices-1] = gfx.Vec3{0, 0, -x}
 	}
 
 	angle = 0.0
@@ -49,7 +48,7 @@ func Cone(scale float32, steps int, capped bool, hint geom.Hint) *geom.Mesh {
 	for i := 0; i < steps; i++ {
 		s, c := math.Sincos(angle)
 		angle += inc
-		vertices[i+1] = geom.Vertex{x * float32(s), x * float32(c), -x}
+		vertices[i+1] = gfx.Vec3{x * float32(s), x * float32(c), -x}
 
 		if i == 0 {
 			indices[0] = 0
@@ -73,15 +72,14 @@ func Cone(scale float32, steps int, capped bool, hint geom.Hint) *geom.Mesh {
 
 		uvX = float32(i - (2 * (i / 2)))
 		uvY = float32((i / 2) - (2 * (i / 4)))
-		textureCoords[i] = texture.UV(uvX, uvY)
+		textureCoords[i] = gfx.TexCoord{uvX, uvY}
 	}
 
-	return &geom.Mesh{
-		Hint:     hint,
+	return &gfx.Mesh{
 		Indices:  indices,
 		Vertices: vertices,
-		TextureCoords: [][]texture.Coord{
-			textureCoords,
+		TexCoords: []gfx.TexCoordSet{
+			gfx.TexCoordSet{Slice: textureCoords},
 		},
 	}
 }

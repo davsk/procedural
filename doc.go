@@ -2,16 +2,17 @@
 
 // Package procedural adds graphic primitives that can be used by azul3d graphics engine.
 //
-// Version v0.1.0 is compatable with package azul3d.org/v0.
+// Version v1.0.0 is compatable with package azul3d.org/v1.
 //
 // Current status of project is at http://github.com/go-azul3d/procedural
 //
 // Installation
 //
 // Instructions for Azul3d are at https://code.google.com/p/azul3d/ .
-//  go get azul3d.org/v0
-//  go get gopkg.in/go-azul3d/procedural.v0
-//  import "gopkg.in/go-azul3d/procedural.v0"
+//  go get azul3d.org/v1
+//  go get gopkg.in/go-azul3d/procedural.v1
+// To import this package, add the following line to your code:
+//  import "gopkg.in/go-azul3d/procedural.v1"
 //
 // Benchmarks
 //

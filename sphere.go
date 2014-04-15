@@ -3,9 +3,8 @@
 package procedural
 
 import (
-	gmath "azul3d.org/v0/math"
-	"azul3d.org/v0/scene/geom"
-	"azul3d.org/v0/scene/texture"
+	"azul3d.org/v1/gfx"
+	gmath "azul3d.org/v1/math"
 	"math"
 )
 
@@ -23,7 +22,7 @@ func almostEqualFloat32(a, b float32) bool {
 }
 
 // almostEqualVertex because a == b does not work close to 0
-func almostEqualVertex(a, b geom.Vertex) bool {
+func almostEqualVertex(a, b gfx.Vec3) bool {
 	if !almostEqualFloat32(a.X, b.X) {
 		return false
 	}
@@ -38,7 +37,7 @@ func almostEqualVertex(a, b geom.Vertex) bool {
 }
 
 // findVertice so we can reuse the same vertice
-func findVertice(s []geom.Vertex, x geom.Vertex) (i uint32) {
+func findVertice(s []gfx.Vec3, x gfx.Vec3) (i uint32) {
 	for i, v := range s {
 		if almostEqualVertex(v, x) {
 			return uint32(i)
@@ -49,24 +48,17 @@ func findVertice(s []geom.Vertex, x geom.Vertex) (i uint32) {
 }
 
 // betweenPoints is a vector of 1 between these two vectors
-func betweenPoints(a geom.Vertex, b geom.Vertex) (c geom.Vertex) {
-	var vA, vB, vC gmath.Vec3
-	vA.X = float64(a.X)
-	vA.Y = float64(a.Y)
-	vA.Z = float64(a.Z)
-	vB.X = float64(b.X)
-	vB.Y = float64(b.Y)
-	vB.Z = float64(b.Z)
-	vC, _ = vA.Add(vB).Normalized()
-	c.X = float32(vC.X)
-	c.Y = float32(vC.Y)
-	c.Z = float32(vC.Z)
+func betweenPoints(a gfx.Vec3, b gfx.Vec3) (c gfx.Vec3) {
+	vA := a.Vec3()
+	vB := b.Vec3()
+	vC, _ := vA.Add(vB).Normalized()
+	c = gfx.ConvertVec3(vC)
 
 	return c
 }
 
 // recurseSphere should only be called by Sphere
-func recurseSphere(a uint32, b uint32, c uint32, vertices []geom.Vertex, textureCoords []texture.Coord, indices []uint32, steps int) (v []geom.Vertex, t []texture.Coord, i []uint32) {
+func recurseSphere(a uint32, b uint32, c uint32, vertices []gfx.Vec3, textureCoords []gfx.TexCoord, indices []uint32, steps int) (v []gfx.Vec3, t []gfx.TexCoord, i []uint32) {
 	if steps == 0 {
 		indices = append(indices, a)
 		indices = append(indices, b)
@@ -124,16 +116,16 @@ func recurseSphere(a uint32, b uint32, c uint32, vertices []geom.Vertex, texture
 	return vertices, textureCoords, indices
 }
 
-// appendVerticesTextureCoords appends geom.Vertex to slice and match UV.Coord to texture slice.
-func appendVerticesTextureCoords(vertices []geom.Vertex, textureCoords []texture.Coord, v geom.Vertex) ([]geom.Vertex, []texture.Coord) {
+// appendVerticesTextureCoords appends gfx.Vec3 to slice and match UV.Coord to texture slice.
+func appendVerticesTextureCoords(vertices []gfx.Vec3, textureCoords []gfx.TexCoord, v gfx.Vec3) ([]gfx.Vec3, []gfx.TexCoord) {
 	vertices = append(vertices, v)
 	uvX, uvY := UvLatLng(v)
-	textureCoords = append(textureCoords, texture.UV(uvX, uvY))
+	textureCoords = append(textureCoords, gfx.TexCoord{uvX, uvY})
 
 	if uvX == 0.0 {
 		vertices = append(vertices, v)
 		uvX = 1.0
-		textureCoords = append(textureCoords, texture.UV(uvX, uvY))
+		textureCoords = append(textureCoords, gfx.TexCoord{uvX, uvY})
 	}
 
 	return vertices, textureCoords
@@ -142,7 +134,7 @@ func appendVerticesTextureCoords(vertices []geom.Vertex, textureCoords []texture
 // Sphere reports a mesh representing a regular octahedron which has been divided by a number of steps.
 // Minimum of 0 steps. Time and memory used expands exponentially as the number of steps increases.
 // Vertices on the dateline are duplicated with textures mapped east or west to match the slope of the face.
-func Sphere(steps int, hint geom.Hint) *geom.Mesh {
+func Sphere(steps int) *gfx.Mesh {
 	if steps < 0 {
 		steps = 0
 	}
@@ -151,16 +143,16 @@ func Sphere(steps int, hint geom.Hint) *geom.Mesh {
 
 	maxIndices := 3 * maxVertices
 
-	vertices := make([]geom.Vertex, 0, maxVertices)
+	vertices := make([]gfx.Vec3, 0, maxVertices)
 	indices := make([]uint32, 0, maxIndices)
-	textureCoords := make([]texture.Coord, 0, maxVertices)
+	textureCoords := make([]gfx.TexCoord, 0, maxVertices)
 
-	vertices, textureCoords = appendVerticesTextureCoords(vertices, textureCoords, geom.Vertex{0, 0, 1})
-	vertices, textureCoords = appendVerticesTextureCoords(vertices, textureCoords, geom.Vertex{0, 0, -1})
-	vertices, textureCoords = appendVerticesTextureCoords(vertices, textureCoords, geom.Vertex{1, 0, 0})
-	vertices, textureCoords = appendVerticesTextureCoords(vertices, textureCoords, geom.Vertex{0, 1, 0})
-	vertices, textureCoords = appendVerticesTextureCoords(vertices, textureCoords, geom.Vertex{-1, 0, 0})
-	vertices, textureCoords = appendVerticesTextureCoords(vertices, textureCoords, geom.Vertex{0, -1, 0})
+	vertices, textureCoords = appendVerticesTextureCoords(vertices, textureCoords, gfx.Vec3{0, 0, 1})
+	vertices, textureCoords = appendVerticesTextureCoords(vertices, textureCoords, gfx.Vec3{0, 0, -1})
+	vertices, textureCoords = appendVerticesTextureCoords(vertices, textureCoords, gfx.Vec3{1, 0, 0})
+	vertices, textureCoords = appendVerticesTextureCoords(vertices, textureCoords, gfx.Vec3{0, 1, 0})
+	vertices, textureCoords = appendVerticesTextureCoords(vertices, textureCoords, gfx.Vec3{-1, 0, 0})
+	vertices, textureCoords = appendVerticesTextureCoords(vertices, textureCoords, gfx.Vec3{0, -1, 0})
 
 	vertices, textureCoords, indices = recurseSphere(0, 2, 3, vertices, textureCoords, indices, steps)
 	vertices, textureCoords, indices = recurseSphere(0, 3, 4, vertices, textureCoords, indices, steps)
@@ -171,18 +163,17 @@ func Sphere(steps int, hint geom.Hint) *geom.Mesh {
 	vertices, textureCoords, indices = recurseSphere(1, 4, 6, vertices, textureCoords, indices, steps)
 	vertices, textureCoords, indices = recurseSphere(1, 5, 2, vertices, textureCoords, indices, steps)
 
-	return &geom.Mesh{
-		Hint:     hint,
+	return &gfx.Mesh{
 		Indices:  indices,
 		Vertices: vertices,
-		TextureCoords: [][]texture.Coord{
-			textureCoords,
+		TexCoords: []gfx.TexCoordSet{
+			gfx.TexCoordSet{Slice: textureCoords},
 		},
 	}
 }
 
 // UvLatLng reports UV Coords 0.0-1.0
-func UvLatLng(p geom.Vertex) (u, v float32) {
+func UvLatLng(p gfx.Vec3) (u, v float32) {
 	var flag bool
 
 	c := gmath.CoordSysZUpRight
@@ -194,7 +185,7 @@ func UvLatLng(p geom.Vertex) (u, v float32) {
 	} else {
 		u = 0.5
 	}
-	vec3 := gmath.Vec3{float64(p.X), float64(p.Y), float64(p.Z)}
+	vec3 := p.Vec3()
 	v = float32(c.Down().Angle(vec3) / math.Pi)
 
 	return u, v
