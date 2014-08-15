@@ -3,8 +3,9 @@
 package procedural
 
 import (
-	"azul3d.org/v1/gfx"
 	"math"
+
+	"azul3d.org/gfx.v1"
 )
 
 // Cone builds and returns an new 3D cone mesh. Minimum of 3 steps.

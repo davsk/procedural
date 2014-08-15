@@ -3,9 +3,10 @@
 package procedural
 
 import (
-	"azul3d.org/v1/gfx"
-	gmath "azul3d.org/v1/math"
 	"math"
+
+	"azul3d.org/gfx.v1"
+	"azul3d.org/lmath.v1"
 )
 
 // almostEqualFloat32 because a == b does not work close to 0
@@ -176,9 +177,9 @@ func Sphere(steps int) *gfx.Mesh {
 func UvLatLng(p gfx.Vec3) (u, v float32) {
 	var flag bool
 
-	c := gmath.CoordSysZUpRight
-	d := gmath.Vec2{0.0, -1.0}
-	vec2 := gmath.Vec2{float64(p.X), float64(p.Y)}
+	c := lmath.CoordSysZUpRight
+	d := lmath.Vec2{0.0, -1.0}
+	vec2 := lmath.Vec2{float64(p.X), float64(p.Y)}
 	vec2, flag = vec2.Normalized()
 	if flag {
 		u = float32(d.Angle(vec2) / math.Pi)

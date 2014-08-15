@@ -3,7 +3,7 @@
 package procedural
 
 import (
-	"azul3d.org/v1/gfx"
+	"azul3d.org/gfx.v1"
 )
 
 // Dice builds and returns an new 3D cube mesh
